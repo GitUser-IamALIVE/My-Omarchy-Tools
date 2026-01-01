@@ -77,37 +77,31 @@ draw_border() {
 
 show_startup_prompt() {
     clear
-    printf "${C_BOLD}${C_YELLOW}    ☕ Terminal Caffeine${C_RESET}\n\n"
+    printf "\n"  # Add spacing at top
     
-    local BOX_W=49
-    
-    print_startup_line() {
-        local content="$1"
-        local plain_content=$(echo -e "$content" | sed 's/\x1B\[[0-9;]*[JKmsu]//g')
-        local display_len=${#plain_content}
-        local padding=$((BOX_W - display_len))
-        printf "${C_CYAN}║${C_RESET} %b%*s ${C_CYAN}║${C_RESET}\n" "$content" "$padding" ""
-    }
-    
-    printf "${C_CYAN}╔"
-    for ((i=0; i<BOX_W+2; i++)); do printf "═"; done
-    printf "╗${C_RESET}\n"
-    
-    print_startup_line "Select timer duration:"
-    print_startup_line ""
-    print_startup_line "      ${C_YELLOW})  (${C_RESET}        ${C_GREEN}1${C_RESET} → 15 minutes"
-    print_startup_line "     ${C_YELLOW}(   ) )${C_RESET}      ${C_GREEN}2${C_RESET} → 30 minutes"
-    print_startup_line "      ${C_YELLOW}) ( (${C_RESET}       ${C_GREEN}3${C_RESET} → 45 minutes"
-    print_startup_line "    ${C_YELLOW}_______)_${C_RESET}     ${C_GREEN}4${C_RESET} → 60 minutes"
-    print_startup_line " ${C_YELLOW}.-'---------|${C_RESET}    ${C_YELLOW}0${C_RESET} → Infinite"
-    print_startup_line "${C_YELLOW}( C|/\\/\\/\\/\\/|${C_RESET}    ${C_BLUE}6${C_RESET} → Custom"
-    print_startup_line " ${C_YELLOW}'-./\\/\\/\\/\\/|${C_RESET}"
-    print_startup_line "   ${C_YELLOW}'_________'${C_RESET}     ${C_DIM}Stack 1-4 to add time${C_RESET}"
-    print_startup_line "    ${C_YELLOW}'-------'${C_RESET}      ${C_BOLD}Press key:${C_RESET}"
-    
-    printf "${C_CYAN}╚"
-    for ((i=0; i<BOX_W+2; i++)); do printf "═"; done
-    printf "╝${C_RESET}\n"
+    draw_border "═" "╔" "╗"
+    print_colored_line "${C_BOLD}${C_YELLOW}☕ TERMINAL CAFFEINE${C_RESET}"
+    draw_border "─" "╟" "╢"
+    print_line ""
+    print_colored_line "Select timer duration:"
+    print_line ""
+    print_colored_line "      ${C_YELLOW})  (${C_RESET}        ${C_GREEN}1${C_RESET} → 15 minutes"
+    print_colored_line "     ${C_YELLOW}(   ) )${C_RESET}      ${C_GREEN}2${C_RESET} → 30 minutes"
+    print_colored_line "      ${C_YELLOW}) ( (${C_RESET}       ${C_GREEN}3${C_RESET} → 45 minutes"
+    print_colored_line "    ${C_YELLOW}_______)_${C_RESET}     ${C_GREEN}4${C_RESET} → 60 minutes"
+    print_colored_line " ${C_YELLOW}.-'---------|${C_RESET}    ${C_YELLOW}0${C_RESET} → Infinite"
+    print_colored_line "${C_YELLOW}( C|/\\/\\/\\/\\/|${C_RESET}    ${C_BLUE}6${C_RESET} → Custom"
+    print_colored_line " ${C_YELLOW}'-./\\/\\/\\/\\/|${C_RESET}"
+    print_colored_line "   ${C_YELLOW}'_________'${C_RESET}     ${C_DIM}Stack 1-4 to add time${C_RESET}"
+    print_colored_line "    ${C_YELLOW}'-------'${C_RESET}      ${C_BOLD}Press key:${C_RESET}"
+    print_line ""
+    print_line ""
+    print_line ""
+    print_line ""
+    draw_border "─" "╟" "╢"
+    print_line ""
+    print_line ""
+    draw_border "═" "╚" "╝"
     
     local choice
     read -n 1 -r choice
@@ -335,9 +329,8 @@ draw_ui() {
 
 show_timer_menu() {
     printf '\033[2J\033[H'  # Clear screen and move cursor to top
-    printf "${C_CYAN}"
+    
     draw_border "═" "╔" "╗"
-    printf "${C_RESET}"
     print_colored_line "${C_BOLD}${C_YELLOW}SET TIMER${C_RESET}"
     draw_border "─" "╟" "╢"
     print_line ""
@@ -346,17 +339,16 @@ show_timer_menu() {
     print_colored_line "      ${C_YELLOW}) ( (${C_RESET}       ${C_GREEN}3${C_RESET} → Add 45 minutes"
     print_colored_line "    ${C_YELLOW}_______)_${C_RESET}     ${C_GREEN}4${C_RESET} → Add 60 minutes"
     print_colored_line " ${C_YELLOW}.-'---------|${C_RESET}    ${C_YELLOW}0${C_RESET} → Set infinite"
-    print_colored_line "${C_YELLOW}( C|/\\/\\/\\/\\/|${C_RESET}"
-    print_colored_line " ${C_YELLOW}'-./\\/\\/\\/\\/|${C_RESET}    ${C_BLUE}C${C_RESET} → Custom duration"
-    print_colored_line "   ${C_YELLOW}'_________'${C_RESET}"
-    print_colored_line "    ${C_YELLOW}'-------'${C_RESET}      ${C_DIM}Q to cancel${C_RESET}"
+    print_colored_line "${C_YELLOW}( C|/\\/\\/\\/\\/|${C_RESET}    ${C_BLUE}C${C_RESET} → Custom duration"
+    print_colored_line " ${C_YELLOW}'-./\\/\\/\\/\\/|${C_RESET}"
+    print_colored_line "   ${C_YELLOW}'_________'${C_RESET}     ${C_DIM}Q to cancel${C_RESET}"
+    print_colored_line "    ${C_YELLOW}'-------'${C_RESET}"
     print_line ""
     print_colored_line "${C_YELLOW}Reset to preset:${C_RESET}"
-    print_colored_line "${C_GREEN}!${C_RESET} 15m  ${C_GREEN}@${C_RESET} 30m  ${C_GREEN}#${C_RESET} 45m  ${C_GREEN}\$${C_RESET} 60m  ${C_DIM}(Shift+1-4)${C_RESET}"
-    printf "${C_CYAN}"
+    print_colored_line "${C_GREEN}!${C_RESET} 15m  ${C_GREEN}@${C_RESET} 30m  ${C_GREEN}#${C_RESET} 45m  ${C_GREEN}\${C_RESET} 60m  ${C_DIM}(Shift+1-4)${C_RESET}"
+    print_line ""
     draw_border "═" "╚" "╝"
-    printf "${C_RESET}\n"
-    printf "${C_BOLD}Press a key:${C_RESET} "
+    printf "\n${C_BOLD}Press a key:${C_RESET} "
     
     local choice
     read -n 1 -r -s choice
@@ -388,30 +380,34 @@ show_timer_menu() {
 
 show_help() {
     printf '\033[2J\033[H'  # Clear screen and move cursor to top
-    printf "${C_CYAN}"
+    
     draw_border "═" "╔" "╗"
-    printf "${C_RESET}"
     print_colored_line "${C_BOLD}${C_YELLOW}HELP${C_RESET}"
     draw_border "─" "╟" "╢"
+    print_line ""
     print_colored_line "${C_GREEN}Q${C_RESET}       Quit and exit"
+    print_colored_line "${C_GREEN}T${C_RESET}       Open timer menu"
+    print_colored_line "${C_GREEN}P${C_RESET}       Pause / resume (stops inhibition)"
+    print_colored_line "${C_GREEN}R${C_RESET}       Reset timer to infinite"
+    print_colored_line "${C_GREEN}H${C_RESET}       Toggle this help"
     print_line ""
     print_colored_line "${C_YELLOW}Quick Timer Presets (Stackable):${C_RESET}"
     print_colored_line "${C_GREEN}1${C_RESET}       Add 15 minutes to timer"
     print_colored_line "${C_GREEN}2${C_RESET}       Add 30 minutes to timer"
     print_colored_line "${C_GREEN}3${C_RESET}       Add 45 minutes to timer"
     print_colored_line "${C_GREEN}4${C_RESET}       Add 60 minutes to timer"
+    print_colored_line "${C_GREEN}0${C_RESET}       Set to infinite (no timer)"
     print_line ""
     print_colored_line "${C_YELLOW}Reset to Preset:${C_RESET}"
     print_colored_line "${C_GREEN}!${C_RESET}       Reset to 15 min (Shift+1)"
     print_colored_line "${C_GREEN}@${C_RESET}       Reset to 30 min (Shift+2)"
     print_colored_line "${C_GREEN}#${C_RESET}       Reset to 45 min (Shift+3)"
-    print_colored_line "${C_GREEN}\$${C_RESET}       Reset to 60 min (Shift+4)"
+    print_colored_line "${C_GREEN}\${C_RESET}       Reset to 60 min (Shift+4)"
     print_line ""
     print_colored_line "${C_DIM}Example: Press 1+1+2 = 1h total${C_RESET}"
-    printf "${C_CYAN}"
+    print_line ""
     draw_border "═" "╚" "╝"
-    printf "${C_RESET}\n"
-    printf "${C_DIM}Press any key to return...${C_RESET}\n"
+    printf "\n${C_DIM}Press any key to return...${C_RESET}\n"
     read -n 1 -r -s
     draw_ui  # Redraw UI after help
 }
